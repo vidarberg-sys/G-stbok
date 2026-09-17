@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gästboken</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=2) }}">
+</head>
+<body>
+    <main class="page-shell">
+        <header class="intro">
+            <p class="eyebrow">En plats för hälsningar</p>
+            <h1>Gästboken</h1>
+            <p class="lead">Lämna en hälsning och läs vad andra besökare har skrivit.</p>
+        </header>
+
+        <section class="content-grid" aria-label="Gästbok">
+            <section class="form-panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Nytt inlägg</p>
+                    <h2>Skriv en hälsning</h2>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="messages" aria-live="polite">
+                            {% for category, message in messages %}
+                                <p class="message {{ category }}">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form method="post" action="{{ url_for('guestbook') }}">
+                    <div class="field-row">
+                        <label for="name">Namn <span aria-hidden="true">*</span></label>
+                        <input id="name" name="name" type="text" maxlength="60" required
+                                value="{{ form_data.get('name', '') }}" autocomplete="name">
+                    </div>
+                    <div class="field-row">
+                        <label for="email">E-post <span class="optional">(valfritt)</span></label>
+                        <input id="email" name="email" type="email" maxlength="50"
+                                value="{{ form_data.get('email', '') }}" autocomplete="email">
+                    </div>
+                    <div class="field-row">
+                        <label for="comment">Meddelande <span aria-hidden="true">*</span></label>
+                        <textarea id="comment" name="comment" maxlength="500" required rows="5">{{ form_data.get('comment', '') }}</textarea>
+                        <small>Högst 500 tecken.</small>
+                    </div>
+                    <button type="submit">Publicera inlägg</button>
+                </form>
+            </section>
+
+            <section class="entries-panel">
+                <div class="section-heading entry-heading">
+                    <p class="eyebrow">Senaste hälsningarna</p>
+                    <h2>{{ entries|length }} inlägg</h2>
+                </div>
+
+                {% if entries %}
+                    <div class="entries-list">
+                        {% for entry in entries %}
+                            <article class="entry">
+                                <div class="entry-meta">
+                                    <h3>{{ entry.name }}</h3>
+                                    <time datetime="{{ entry.time }}">{{ entry.time|replace('T', ' ') }}</time>
+                                </div>
+                                <p class="comment">{{ entry.comment }}</p>
+                                <div class="contact-links">
+                                    {% if entry.email %}<a href="mailto:{{ entry.email }}">{{ entry.email }}</a>{% endif %}
+                                    {% if entry.homepage %}<a href="{{ entry.homepage }}" target="_blank" rel="noopener">Besök hemsida</a>{% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>Här är det tomt än så länge.</p>
+                        <span>Bli den första att lämna en hälsning.</span>
+                    </div>
+                {% endif %}
+            </section>
+        </section>
+    </main>
+</body>
+</html>
