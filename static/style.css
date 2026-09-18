@@ -1,14 +1,14 @@
 :root {
-    --bg: #f4f7ff;
-    --panel: #ffffff;
-    --panel-soft: #eef4ff;
-    --primary: #4f46e5;
-    --primary-dark: #3730a3;
+    --bg: #5c83ef;
+    --panel: #343980;
+    --panel-soft: #4f6897;
+    --primary: #443bea;
+    --primary-dark: #322aab;
     --accent: #22c55e;
     --error: #ef4444;
     --text: #1f2937;
-    --muted: #667085;
-    --border: #dfe7f5;
+    --muted: #4a5e8a;
+    --border: #375385;
     --shadow: 0 16px 38px rgba(79, 70, 229, 0.12);
 }
 
@@ -341,4 +341,5 @@ button:hover {
     border-top: 1px solid var(--border);
     color: var(--muted);
     font-size: 0.9rem;
+    color: black;
 }
