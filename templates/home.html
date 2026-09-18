@@ -8,10 +8,14 @@
 </head>
 <body>
     <main class="page-shell">
+        <nav class="top-nav" aria-label="Huvudnavigation">
+            <a href="{{ url_for('guestbook') }}">Hem</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+        </nav>
+
         <header class="intro">
-            <p class="eyebrow">En plats för hälsningar</p>
             <h1>Gästboken</h1>
-            <p class="lead">Lämna en hälsning och läs vad andra besökare har skrivit.</p>
         </header>
 
         <section class="content-grid" aria-label="Gästbok">
@@ -43,6 +47,12 @@
                                 value="{{ form_data.get('email', '') }}" autocomplete="email">
                     </div>
                     <div class="field-row">
+                        <label for="website">Hemsida <span class="optional">(valfritt)</span></label>
+                        <input id="website" name="website" type="url" maxlength="100"
+                                value="{{ form_data.get('website', '') }}" autocomplete="url"
+                                placeholder="https://example.com">
+                    </div>
+                    <div class="field-row">
                         <label for="comment">Meddelande <span aria-hidden="true">*</span></label>
                         <textarea id="comment" name="comment" maxlength="500" required rows="5">{{ form_data.get('comment', '') }}</textarea>
                         <small>Högst 500 tecken.</small>
@@ -63,12 +73,21 @@
                             <article class="entry">
                                 <div class="entry-meta">
                                     <h3>{{ entry.name }}</h3>
-                                    <time datetime="{{ entry.time }}">{{ entry.time|replace('T', ' ') }}</time>
+                                    <time datetime="{{ entry.time }}">{{ entry.time[:10] }}</time>
                                 </div>
-                                <p class="comment">{{ entry.comment }}</p>
-                                <div class="contact-links">
-                                    {% if entry.email %}<a href="mailto:{{ entry.email }}">{{ entry.email }}</a>{% endif %}
-                                    {% if entry.homepage %}<a href="{{ entry.homepage }}" target="_blank" rel="noopener">Besök hemsida</a>{% endif %}
+
+                                <div class="entry-details">
+                                    {% if entry.email %}
+                                        <p class="entry-line"><strong>E-post:</strong> <a href="mailto:{{ entry.email }}">{{ entry.email }}</a></p>
+                                    {% endif %}
+
+                                    {% set website = entry.website or entry.homepage %}
+                                    {% if website %}
+                                        <p class="entry-line"><strong>Webbsida:</strong> <a href="{{ website }}" target="_blank" rel="noopener">{{ website | replace('https://', '') | replace('http://', '') }}</a></p>
+                                    {% endif %}
+
+                                    <p class="entry-line"><strong>Meddelande:</strong></p>
+                                    <p class="comment">{{ entry.comment }}</p>
                                 </div>
                             </article>
                         {% endfor %}
@@ -82,5 +101,30 @@
             </section>
         </section>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const websiteInput = document.getElementById('website');
+            if (!websiteInput) return;
+
+            const addHttpsPrefix = function () {
+                const value = websiteInput.value.trim();
+                if (!value || /^https?:\/\//i.test(value)) {
+                    return;
+                }
+                websiteInput.value = 'https://' + value;
+            };
+
+            websiteInput.addEventListener('blur', addHttpsPrefix);
+            if (websiteInput.form) {
+                websiteInput.form.addEventListener('submit', addHttpsPrefix);
+            }
+        });
+    </script>
 </body>
+
+<div class="footer">
+    <footer>
+        <p>Detta är en gästbok footer bara så du vet</p>
+    </footer>
+</div>
 </html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="sv">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=2) }}">
+</head>
+<body>
+    <main class="page-shell page-simple">
+        <nav class="top-nav" aria-label="Huvudnavigation">
+            <a href="{{ url_for('guestbook') }}">Hem</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+        </nav>
+
+        <header class="intro">
+            <h1>About</h1>
+        </header>
+
+        <section class="info-card">
+            <p>Detta är about page bara så du vet.</p>
+        </section>
+    </main>
+</body>
+
+<div class="footer">
+    <footer>
+        <p>Detta är en gästbok footer bara så du vet</p>
+    </footer>
+</div>
+
+</html>
